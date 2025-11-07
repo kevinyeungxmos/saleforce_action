@@ -116,7 +116,7 @@ app.post('/api/lead', async (req, res) => {
     }
 
     // Success
-    returnres.status(201).json({
+    return res.status(201).json({
       success: true,
       salesforceId: sfResponse.data.id,
       message: 'Lead created successfully in Salesforce'
