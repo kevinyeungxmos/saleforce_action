@@ -30,8 +30,8 @@ async function getSalesforceToken() {
 
 requiredLeadData = ["email","phone","firstname","lastname","business_name"];
 
-// POST /api/lead - Create Lead in Salesforce
-app.post('/api/lead', async (req, res) => {
+// POST /sf_api/lead - Create Lead in Salesforce
+app.post('/sf_api/lead', async (req, res) => {
 
   let requestedLeadBody = {};
 
