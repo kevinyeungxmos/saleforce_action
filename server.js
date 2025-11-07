@@ -136,7 +136,7 @@ app.post('/sf_api/lead', async (req, res) => {
 });
 
 // Health check
-app.get('/', (req, res) => {
+app.get('/sf_api/health_check', (req, res) => {
   res.json({ message: 'Salesforce Lead API is running!' });
 });
 
