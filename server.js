@@ -40,6 +40,8 @@ app.post('/sf_api/lead', async (req, res) => {
 
   let requestedLeadBody = {};
 
+  console.log("Received lead creation request:", req.body);
+
   // Validate required fields
   if(req.body == undefined || req.body == null){
     return res.status(400).json({
