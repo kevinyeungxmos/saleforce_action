@@ -80,6 +80,7 @@ app.post('/sf_api/lead', async (req, res) => {
   requestedLeadBody["City"] = req.body.city || '';
   requestedLeadBody["Country"] = req.body.country || '';
   requestedLeadBody["PostalCode"] = req.body.zip_code || '';
+  requestedLeadBody["State"] = req.body.state || '';
 
   try {
     // Step 1: Create Lead in Salesforce
