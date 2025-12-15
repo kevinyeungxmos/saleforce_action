@@ -81,6 +81,20 @@ app.post('/sf_api/lead', async (req, res) => {
   requestedLeadBody["Country"] = req.body.country || '';
   requestedLeadBody["PostalCode"] = req.body.zip_code || '';
   requestedLeadBody["State"] = req.body.state || '';
+  requestedLeadBody["LeadSource"] = "Website";
+  requestedLeadBody["RecordType"] = {
+    "Name":  "Dealer Qualification"
+  };
+  requestedLeadBody["Interested_Products__c"] = "";
+  if (req.body.products_of_interest){
+    req.body.products_of_interest.forEach(product => {
+      requestedLeadBody["Interested_Products__c"] += product+";"
+    })
+  }
+
+  requestedLeadBody["Interested_Products__c"] = requestedLeadBody["Interested_Products__c"].slice(0, -1); 
+
+  console.log("requestedLeadBody: ", requestedLeadBody);
 
   try {
     // Step 1: Create Lead in Salesforce
