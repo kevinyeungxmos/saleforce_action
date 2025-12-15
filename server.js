@@ -83,14 +83,14 @@ app.post('/sf_api/lead', async (req, res) => {
   requestedLeadBody["RecordType"] = {
     "Name":  "Dealer Qualification"
   };
-  requestedLeadBody["Interested_Products__c"] = "";
+  requestedLeadBody["Interested_Products_c"] = "";
   if (req.body.products_of_interest){
     req.body.products_of_interest.forEach(product => {
-      requestedLeadBody["Interested_Products__c"] += product+";"
+      requestedLeadBody["Interested_Products_c"] += product+";"
     })
   }
 
-  requestedLeadBody["Interested_Products__c"] = requestedLeadBody["Interested_Products__c"].slice(0, -1); 
+  requestedLeadBody["Interested_Products_c"] = requestedLeadBody["Interested_Products_c"].slice(0, -1); 
 
   console.log("requestedLeadBody: ", requestedLeadBody);
 
