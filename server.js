@@ -85,6 +85,12 @@ app.post('/sf_api/lead', async (req, res) => {
   };
   requestedLeadBody["Interested_Products__c"] = "";
   if (req.body.products_of_interest){
+    if (req.body.products_of_interest.length == 0){
+      return res.status(400).json({
+        success: false,
+        error: "Missing product of interest"
+      });
+    }
     req.body.products_of_interest.forEach(product => {
       requestedLeadBody["Interested_Products__c"] += product+";"
     })
@@ -94,65 +100,65 @@ app.post('/sf_api/lead', async (req, res) => {
 
   console.log("requestedLeadBody: ", requestedLeadBody);
 
-  // try {
-  //   // Step 1: Create Lead in Salesforce
-  //   const sfResponse = await axios.post(
-  //     `${process.env.SF_API_BASE}/sobjects/Lead`,
-  //     requestedLeadBody,
-  //     {
-  //       validateStatus: function (status) {
-  //         return status >= 200 && status < 300 || status == 401;
-  //       },
-  //       headers: {
-  //         'Authorization': `Bearer ${access_token}`,
-  //         'Content-Type': 'application/json'
-  //       }
-  //     }
-  //   );
+  try {
+    // Step 1: Create Lead in Salesforce
+    const sfResponse = await axios.post(
+      `${process.env.SF_API_BASE}/sobjects/Lead`,
+      requestedLeadBody,
+      {
+        validateStatus: function (status) {
+          return status >= 200 && status < 300 || status == 401;
+        },
+        headers: {
+          'Authorization': `Bearer ${access_token}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
 
-  //   // If unauthorized, get a new token and retry
-  //   if (sfResponse.status != 201) {
-  //     console.error('Salesforce lead creation failed:', sfResponse.data);
-  //     //get access token again
-  //     access_token = await getSalesforceToken();
-  //     //try one more time
-  //     const sfResponse2 = await axios.post(
-  //       `${process.env.SF_API_BASE}/sobjects/Lead`,
-  //       requestedLeadBody,
-  //       {
-  //         headers: {
-  //           'Authorization': `Bearer ${access_token}`,
-  //           'Content-Type': 'application/json'
-  //         }
-  //       }
-  //     );
+    // If unauthorized, get a new token and retry
+    if (sfResponse.status != 201) {
+      console.error('Salesforce lead creation failed:', sfResponse.data);
+      //get access token again
+      access_token = await getSalesforceToken();
+      //try one more time
+      const sfResponse2 = await axios.post(
+        `${process.env.SF_API_BASE}/sobjects/Lead`,
+        requestedLeadBody,
+        {
+          headers: {
+            'Authorization': `Bearer ${access_token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
       
-  //     // Success
-  //     return res.status(201).json({
-  //       success: true,
-  //       salesforceId: sfResponse2.data.id,
-  //       message: 'Lead created successfully in Salesforce'
-  //     });
-  //   }
+      // Success
+      return res.status(201).json({
+        success: true,
+        salesforceId: sfResponse2.data.id,
+        message: 'Lead created successfully in Salesforce'
+      });
+    }
 
-  //   // Success
-  //   return res.status(201).json({
-  //     success: true,
-  //     salesforceId: sfResponse.data.id,
-  //     message: 'Lead created successfully in Salesforce'
-  //   });
+    // Success
+    return res.status(201).json({
+      success: true,
+      salesforceId: sfResponse.data.id,
+      message: 'Lead created successfully in Salesforce'
+    });
 
-  // } catch (error) {
-  //   console.error('Lead creation failed:', error.response?.data || error.message);
+  } catch (error) {
+    console.error('Lead creation failed:', error.response?.data || error.message);
 
-  //   const status = error.response?.status || 500;
-  //   const message = error.response?.data || 'Internal server error';
+    const status = error.response?.status || 500;
+    const message = error.response?.data || 'Internal server error';
 
-  //   res.status(status).json({
-  //     success: false,
-  //     error: message
-  //   });
-  // }
+    res.status(status).json({
+      success: false,
+      error: message
+    });
+  }
 });
 
 // Health check
