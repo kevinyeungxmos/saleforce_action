@@ -14,6 +14,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 let access_token = process.env.SF_ACCESS_TOKEN;
+let access_token_sandbox = process.env.SF_ACCESS_TOKEN_SANDBOX;
 
 // Helper: Get Salesforce Access Token
 async function getSalesforceToken() {
@@ -243,7 +244,6 @@ app.post('/sf_api/lead/become-a-dealer', async (req, res) => {
 
   try {
     // Step 1: Create Lead in Salesforce
-    const at = "00DVA000002XEuH!AQEAQAFhWW4WZE_uT4BV31Mx4ofNBRfz7MMf085AvpWmWqxRWZBFS93CvEmEPfsSTDH7vpAWi1HKv7nCadLBRQHXwQfDFPgi";
     const sfResponse = await axios.post(
       `https://greenworkstools123--full.sandbox.my.salesforce.com/services/data/v64.0/sobjects/Lead`,
       requestedLeadBody,
@@ -252,7 +252,7 @@ app.post('/sf_api/lead/become-a-dealer', async (req, res) => {
           return status >= 200 && status < 300 || status == 401;
         },
         headers: {
-          'Authorization': `Bearer ${at}`,
+          'Authorization': `Bearer ${access_token_sandbox}`,
           'Content-Type': 'application/json'
         }
       }
