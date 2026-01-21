@@ -14,7 +14,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 let access_token = process.env.SF_ACCESS_TOKEN;
-let access_token_sandbox = process.env.SF_ACCESS_TOKEN_SANDBOX;
+let access_token_sandbox = "00DVA000002XEuH!AQEAQAFhWW4WZE_uT4BV31Mx4ofNBRfz7MMf085AvpWmWqxRWZBFS93CvEmEPfsSTDH7vpAWi1HKv7nCadLBRQHXwQfDFPgi";
 
 // Helper: Get Salesforce Access Token
 async function getSalesforceToken() {
