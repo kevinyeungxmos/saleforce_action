@@ -34,7 +34,8 @@ async function getSalesforceToken() {
   }
 }
 
-requiredLeadData = ["email","phone","firstname","lastname","business_name"];
+requiredLeadData_rdf = ["email","phone","firstname","lastname","business_name","zip_code","products_of_interest","state","city","address1"];
+requiredLeadData_bad = ["email","phone","firstname","lastname","business_name","zip_code","products_of_carrying","current_brands_carried","state","city","address1"];
 
 // POST /sf_api/lead - Create Lead in Salesforce
 app.post('/sf_api/lead', async (req, res) => {
@@ -50,7 +51,7 @@ app.post('/sf_api/lead', async (req, res) => {
   }
 
   //configure lead body
-  for (const field of requiredLeadData) {
+  for (const field of requiredLeadData_rdf) {
     if (!req.body.hasOwnProperty(field)) {
       return res.status(400).json({
         success: false,
@@ -92,9 +93,16 @@ app.post('/sf_api/lead', async (req, res) => {
         error: "Missing product of interest"
       });
     }
-    req.body.products_of_interest.forEach(product => {
-      requestedLeadBody["Interested_Products__c"] += product+";"
-    })
+    if(Array.isArray(req.body.products_of_interest)){
+      req.body.products_of_interest.forEach(product => {
+        requestedLeadBody["Interested_Products__c"] += product+";"
+      })
+    }else{
+      return res.status(400).json({
+        success: false,
+        error: "Invalid request body Interested_Products__c should be an array"
+      });
+    }
   }
 
   requestedLeadBody["Interested_Products__c"] = requestedLeadBody["Interested_Products__c"].slice(0, -1); 
@@ -176,7 +184,7 @@ app.post('/sf_api/lead/become-a-dealer', async (req, res) => {
   }
 
   //configure lead body
-  for (const field of requiredLeadData) {
+  for (const field of requiredLeadData_bad) {
     if (!req.body.hasOwnProperty(field)) {
       return res.status(400).json({
         success: false,
@@ -218,9 +226,16 @@ app.post('/sf_api/lead/become-a-dealer', async (req, res) => {
         error: "Missing product of interest"
       });
     }
-    req.body.products_of_carrying.forEach(product => {
-      requestedLeadBody["Products_Interested_In_Carrying__c"] += product+";"
-    })
+    if(Array.isArray(req.body.products_of_carrying)){
+      req.body.products_of_carrying.forEach(product => {
+        requestedLeadBody["Products_Interested_In_Carrying__c"] += product+";"
+      })
+    }else{
+      return res.status(400).json({
+        success: false,
+        error: "Invalid request body Products_Interested_In_Carrying__c should be an array"
+      });
+    }
   }
 
   requestedLeadBody["Current_Brands_Carried__c"] = "";
@@ -231,9 +246,16 @@ app.post('/sf_api/lead/become-a-dealer', async (req, res) => {
         error: "Missing current brands carried"
       });
     }
-    req.body.current_brands_carried.forEach(product => {
-      requestedLeadBody["Current_Brands_Carried__c"] += product+";"
-    })
+    if(Array.isArray(req.body.current_brands_carried)){
+      req.body.current_brands_carried.forEach(product => {
+        requestedLeadBody["Current_Brands_Carried__c"] += product+";"
+      })
+    }else{
+      return res.status(400).json({
+        success: false,
+        error: "Invalid request body Current_Brands_Carried__c should be an array"
+      });
+    }
   }
 
   requestedLeadBody["Products_Interested_In_Carrying__c"] = requestedLeadBody["Products_Interested_In_Carrying__c"].slice(0, -1);
