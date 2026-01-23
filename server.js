@@ -107,7 +107,7 @@ app.post('/sf_api/lead', async (req, res) => {
 
   requestedLeadBody["Interested_Products__c"] = requestedLeadBody["Interested_Products__c"].slice(0, -1); 
 
-  console.log("requestedLeadBody: ", requestedLeadBody);
+  console.log("Request Demo Form requestedLeadBody: ", requestedLeadBody);
 
   try {
     // Step 1: Create Lead in Salesforce
@@ -262,19 +262,19 @@ app.post('/sf_api/lead/become-a-dealer', async (req, res) => {
 
   requestedLeadBody["Current_Brands_Carried__c"] = requestedLeadBody["Current_Brands_Carried__c"].slice(0, -1);
 
-  console.log("become a dealer form requestedLeadBody: ", requestedLeadBody);
+  console.log("Become a dealer form requestedLeadBody: ", requestedLeadBody);
 
   try {
     // Step 1: Create Lead in Salesforce
     const sfResponse = await axios.post(
-      `https://greenworkstools123--full.sandbox.my.salesforce.com/services/data/v64.0/sobjects/Lead`,
+      `${process.env.SF_API_BASE}/sobjects/Lead`,
       requestedLeadBody,
       {
         validateStatus: function (status) {
           return status >= 200 && status < 300 || status == 401;
         },
         headers: {
-          'Authorization': `Bearer ${access_token_sandbox}`,
+          'Authorization': `Bearer ${access_token}`,
           'Content-Type': 'application/json'
         }
       }
